@@ -1,0 +1,20 @@
+name: Tests
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * *"
+jobs:
+  default:
+    name: Default
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure Git
+        run: git config --global url."https://${{ github.actor }}:${{ github.token }}@github.com".insteadOf "https://github.com"
+      - name: Initialize Go module
+        run: go mod init go.example.com/test
+      - name: Install dependency using Go vanity URL.
+        run: go get ${{ vars.GO_VANITY_URL }}/bottle@${{ github.sha }}
+        env:
+          GOPRIVATE: ${{ vars.GO_VANITY_URL }}
